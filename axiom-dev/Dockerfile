@@ -1,4 +1,4 @@
-FROM axiom-sim
+FROM medicineyeh/axiom-sim
 LABEL maintainer "medicineyeh"
 
 RUN : \
