@@ -1,0 +1,3 @@
+Server = http://tw.mirror.archlinuxarm.org/$arch/$repo
+Server = http://mirror.archlinuxarm.org/$arch/$repo
+
