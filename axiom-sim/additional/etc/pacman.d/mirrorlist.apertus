@@ -1,0 +1,8 @@
+#
+# Arch Linux ARM repository mirrorlist for Apertus packages
+#
+
+SigLevel = Optional TrustAll
+
+### Version 0.1
+Server = https://github.com/axiom-PR-playground/AXIOM-packages/releases/download/v0.1
