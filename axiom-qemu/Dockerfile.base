@@ -1,0 +1,57 @@
+FROM ubuntu:18.10 AS build-env
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBCONF_NONINTERACTIVE_SEEN=true
+
+RUN apt-get update -q && apt-get install -yyq \
+    wget \
+    git \
+    e2fsprogs  \
+    mtools \
+    build-essential \
+    gcc-arm-linux-gnueabi \
+    libglib2.0-dev \
+    zlib1g-dev \
+    dh-autoreconf \
+    flex \
+    bison \
+    dosfstools \
+    bc \
+    python \
+    qemu-user-static \
+    openssl \
+    expect \
+    libssl-dev \
+    libelf-dev \
+    device-tree-compiler \
+    libpixman-1-dev \
+    rsync \
+    ncurses-dev \
+    kmod \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /root
+RUN git clone --depth 1 https://github.com/Xilinx/qemu.git qemu-xlnx \
+    && cd qemu-xlnx \
+    && git submodule update --init dtc
+RUN mkdir -p qemu-xlnx/build \
+    && cd qemu-xlnx/build \
+    && ../configure \
+        --extra-cflags="-Werror=format-truncation=0" \
+        --python=python2 \
+        --target-list="aarch64-softmmu" \
+        --enable-fdt \
+        --disable-kvm \
+        --disable-xen \
+    && make -j $(nproc) \
+    && make DESTDIR=/root/qemu-install install
+
+FROM ubuntu:18.10
+RUN apt-get -qq update && apt-get -yq install locales libglib2.0-0 libpixman-1-0 && rm -rf /var/lib/apt/lists/* \
+    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+ENV LANG en_US.utf8
+COPY --from=build-env /usr/bin/qemu-arm-static /usr/bin
+COPY --from=build-env /usr/bin/qemu-aarch64-static /usr/bin
+COPY --from=build-env /root/qemu-install /
+
+WORKDIR /root

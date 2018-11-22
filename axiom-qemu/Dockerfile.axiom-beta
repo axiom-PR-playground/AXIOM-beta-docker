@@ -1,0 +1,74 @@
+FROM medicineyeh/axiom-qemu
+
+# Download and add presets of AXIOM beta hardware environment and u-boot kernel
+ARG LINK="https://github.com/axiom-PR-playground/AXIOM-beta-Platform-Supports/releases/download/v0.1"
+ADD ${LINK}/devicetree.dtb /root/devicetree.dtb
+ADD ${LINK}/u-boot.elf /root/u-boot.elf
+
+ENTRYPOINT qemu-system-aarch64 \
+        -M arm-generic-fdt-7series \
+        -machine linux=on \
+        -dtb /root/devicetree.dtb \
+        -kernel /root/u-boot.elf \
+        -boot mode=5 \
+        -nographic \
+        -serial /dev/null -serial mon:stdio \
+        -gdb tcp::1440 \
+        -drive if=sd,format=raw,index=0,file=axiom.img
+
+# NOTE: To run the docker command, please use:
+# docker run --rm -it -v $(pwd)/YOUR_IMAGE_FILE:/root/axiom.img medicineyeh/axiom-qemu:axiom-beta
+
+# NOTE: The devicetree.dtb here is not used by Linux kernel, it's used by QEMU only.
+# The one that really does the job is in the guest image boot partition, i.e. /boot/devicetree.dtb.
+# So, there is no need to worry and upgrade the dtb basically.
+
+### Theoretically... (explains why we need so many arguments)
+# We only need to pass the full(raw) SD-card image to QEMU.
+# However, in practice, it's better to define the target machine,
+# i.e. Micro-Zed/Zedboard, with the dtb file instead of the presets
+# defined in QEMU.
+# In addition, it's also easier/more-robust to pass u-boot to QEMU,
+# because QEMU does not come with boot ROM which exists on the real platform.
+# The Real platform reads BOOT.bin and execute some configurations with FSBL.
+# We skip this part of boot process and make CPU runs u-boot directly.
+# At the end, it's better to pack the configuration files and standard u-boot binary
+# in a docker file, providing the preset of our target board.
+
+### Comments
+# -M arm-generic-fdt-7series
+#     Standard options. No machine/platform/board is speficied.
+#     <hw-dtb>/<dtb> is the QEMU machine description.
+# -machine linux=on
+#     Specifies if -kernel is provided an linux kernel image.
+# -serial /dev/null -serial mon:stdio
+#     Connect UART1 to the terminal and ignore UART0
+# -dtb
+#     Specify the linux dtb path which is used by QEMU emulation
+# -hw-dtb
+#     Used for FPGA co-simulation only; for specifying the IPs without passing to u-boot.
+# -kernel
+#     Specify path to guest image, such as kernel
+# -boot
+#     Specify the boot mode pins
+# -nographic
+#     QEMU attaches the invoking terminal to the serial port in this case
+#     (in the default use cases, this is UART0).
+#
+#     In this mode, the QEMU monitor (a command line interface for sending control
+#     commands to QEMU) is multiplexed on stdio. To switch between the serial port
+#     and the monitor, use the following command:
+#
+#     CTRL-a c
+#
+# -gdb tcp::<port-num>
+#     With QEMU running, connect the QEMU using the XSDB gdbremote command:
+#         gdbremote connect <hostname>:<port-num>
+#
+# -drive file=<image-path>, if=<[ sd | mtd | pflash ]>, format=raw, index=<index_num>
+#     Specify files for persistent storage media (SD, QSPI or NAND respectively).
+#     <index_num> specifies the respective controller for each media type.
+
+
+# Reference
+# https://www.xilinx.com/support/documentation/sw_manuals/xilinx2017_4/ug1169-xilinx-qemu.pdf
