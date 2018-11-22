@@ -12,10 +12,7 @@ RUN : \
         kmod \
         inetutils \
     && rm -rf \
-      /usr/share/man/* \
       /var/cache/pacman/pkg/* \
-      /var/lib/pacman/sync/* \
-      /README \
-      /etc/pacman.d/mirrorlist.pacnew
+      /var/lib/pacman/sync/*
 
 CMD ["/bin/bash"]
