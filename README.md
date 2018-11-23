@@ -21,9 +21,12 @@ docker push medicineyeh/axiom-pkgbuild
 1. Enter the sub directory
 2. Run `docker build -t {Name} .`
 
-# axiom-qemu Dockerfiles
+# Dockerfiles of axiom-qemu
 This docker container has serveral files for different presets of QEMU.
 The __Dockerfile.base__ is for building the basic QEMU exeutable without a entry point and any config files/binaries.
 As for __Dockerfile.axiom-beta__, it is based on the base container and add presets for a specific target platform, AXIOM beta. The entry point is also set up for ease of use.
 
 To manage the different versions of presets, we use tag of the container to identiy the presets. So, one can run `docker run axiom-qemu:latest` for the base container and `docker run axiom-qemu:axiom-beta` for the AXIOM beta preset.
+
+# License
+TBA
