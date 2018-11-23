@@ -12,7 +12,8 @@ This repo contains the docker files for AXIOM projects.
 # Release the containers for users
 docker push medicineyeh/axiom-sim
 docker push medicineyeh/axiom-dev
-docker push medicineyeh/axiom-qemu
+docker push medicineyeh/axiom-qemu:latest
+docker push medicineyeh/axiom-qemu:axiom-beta
 docker push medicineyeh/axiom-pkgbuild
 ```
 
