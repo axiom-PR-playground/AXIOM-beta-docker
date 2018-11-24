@@ -15,7 +15,6 @@ RUN : \
     && pacman --noconfirm -Syu \
     && pacman --noconfirm -S vim wget git sudo \
     && rm -rf \
-      /usr/share/man/* \
       /var/cache/pacman/pkg/* \
       /var/lib/pacman/sync/* \
       /README \
