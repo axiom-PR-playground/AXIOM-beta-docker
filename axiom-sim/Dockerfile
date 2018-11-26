@@ -25,6 +25,7 @@ ADD additional/etc/ca-certificates /etc/ca-certificates
 
 # Upgrade AXIOM built packages, i.e. linux kernel, FPGA IPs, boot binary
 RUN : \
+    && rm -rf /boot/* \
     && pacman --noconfirm -Syy \
     && pacman --noconfirm -R linux-zedboard \
     && pacman --noconfirm -S axiom-beta \
