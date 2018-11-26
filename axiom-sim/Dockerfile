@@ -13,7 +13,7 @@ RUN : \
     && pacman-key --init \
     && pacman-key --populate archlinuxarm \
     && pacman --noconfirm -Syu \
-    && pacman --noconfirm -S vim wget git sudo \
+    && pacman --noconfirm -S vim wget git sudo htop \
     && rm -rf \
       /var/cache/pacman/pkg/* \
       /var/lib/pacman/sync/* \
@@ -31,6 +31,5 @@ RUN : \
     && rm -rf \
       /var/cache/pacman/pkg/* \
       /var/lib/pacman/sync/*
-
 
 CMD ["/bin/bash"]
