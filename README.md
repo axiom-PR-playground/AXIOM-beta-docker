@@ -7,6 +7,8 @@ This repo contains the docker files for AXIOM projects.
 
 # Build and Publish/Release
 ```
+# Download the latest release of ArchLinux ARM root filesystem from the internet
+wget http://os.archlinuxarm.org/os/ArchLinuxARM-zedboard-latest.tar.gz -o axiom-sim/ArchLinuxARM-zedboard-latest.tar.gz
 # Build all the containers
 ./build.sh
 # Release the containers for users
