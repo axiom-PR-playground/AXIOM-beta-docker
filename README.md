@@ -12,11 +12,7 @@ wget http://os.archlinuxarm.org/os/ArchLinuxARM-zedboard-latest.tar.gz -O axiom-
 # Build all the containers
 ./build.sh
 # Release the containers for users
-docker push medicineyeh/axiom-sim
-docker push medicineyeh/axiom-dev
-docker push medicineyeh/axiom-qemu:latest
-docker push medicineyeh/axiom-qemu:axiom-beta
-docker push medicineyeh/axiom-pkgbuild
+./publish.sh
 ```
 
 ## Build individual docker container
