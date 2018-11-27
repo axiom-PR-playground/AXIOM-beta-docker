@@ -13,7 +13,19 @@ RUN : \
     && pacman-key --init \
     && pacman-key --populate archlinuxarm \
     && pacman --noconfirm -Syu \
-    && pacman --noconfirm -S vim wget git sudo htop \
+    && pacman --noconfirm -S \
+        bc \
+        nano \
+        vim \
+        git \
+        wget \
+        sudo \
+        htop \
+        figlet \
+        devmem \
+        i2c-tools \
+        python-pip \
+        lighttpd \
     && rm -rf \
       /var/cache/pacman/pkg/* \
       /var/lib/pacman/sync/* \
@@ -22,6 +34,13 @@ RUN : \
 # Over-write again after the system upgrade
 # This is currently used to fix empty CA certificate file problems after installing 'ca-certificates'
 ADD additional/etc/ca-certificates /etc/ca-certificates
+
+# Install python packages
+RUN : \
+    pip install --progress-bar=off \
+        numpy \
+        pypng \
+        pyserial
 
 # Upgrade AXIOM built packages, i.e. linux kernel, FPGA IPs, boot binary
 RUN : \

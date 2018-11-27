@@ -5,12 +5,12 @@ RUN : \
     && pacman -Syy \
     && pacman -S --noconfirm \
         base-devel \
-        bc \
         git \
         openssh \
         xmlto \
         kmod \
         inetutils \
+        cmake \
     && rm -rf \
       /var/cache/pacman/pkg/* \
       /var/lib/pacman/sync/*
