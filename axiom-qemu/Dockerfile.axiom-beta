@@ -1,20 +1,25 @@
 FROM medicineyeh/axiom-qemu
 
 # Download and add presets of AXIOM beta hardware environment and u-boot kernel
-ARG LINK="https://github.com/axiom-PR-playground/AXIOM-beta-Platform-Supports/releases/download/v0.1"
+ARG LINK="https://github.com/axiom-PR-playground/AXIOM-beta-Platform-Supports/releases/download/v1.0"
 ADD ${LINK}/devicetree.dtb /root/devicetree.dtb
 ADD ${LINK}/u-boot.elf /root/u-boot.elf
 
-ENTRYPOINT qemu-system-aarch64 \
-        -M arm-generic-fdt-7series \
-        -machine linux=on \
-        -dtb /root/devicetree.dtb \
-        -kernel /root/u-boot.elf \
-        -boot mode=5 \
-        -nographic \
-        -serial /dev/null -serial mon:stdio \
-        -gdb tcp::1440 \
-        -drive if=sd,format=raw,index=0,file=axiom.img
+ENTRYPOINT [ "/usr/local/bin/qemu-system-aarch64", \
+    "-M", "arm-generic-fdt-7series", \
+    "-machine", "linux=on", \
+    "-dtb", "/root/devicetree.dtb", \
+    "-kernel", "/root/u-boot.elf", \
+    "-boot", "mode=5", \
+    "-nographic", \
+    "-serial", "/dev/null", "-serial", "mon:stdio", \
+    "-gdb", "tcp::1440", \
+    "-drive", "if=sd,format=raw,index=0,file=axiom.img" \
+]
+# TODO network is not working
+CMD [ \
+    "-netdev", "user,id=net0,hostfwd=tcp::5022-:22", \
+    ""] # The last one is just a dummy empty argument
 
 # NOTE: To run the docker command, please use:
 # docker run --rm -it -v $(pwd)/YOUR_IMAGE_FILE:/root/axiom.img medicineyeh/axiom-qemu:axiom-beta
